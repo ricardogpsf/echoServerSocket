@@ -1,6 +1,6 @@
 import tkinter as tk
-from view.client_console_simulator import ClientConsoleSimulator
-from view.server_app import ServerApp
+from views.client_console_simulator import ClientConsoleSimulator
+from views.server_app import ServerApp
 
 
 class Application(tk.Frame):
@@ -64,9 +64,3 @@ class Application(tk.Frame):
             except:
                 self.client_console.close()
                 self.message_label.configure(text='Não foi possível conectar ao servidor', fg='red')
-
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    app = Application(root)
-    app.mainloop()
