@@ -1,8 +1,10 @@
 # EchoServerSocket Example
 
 This is simple example of Echo Server using socket for communication.
+
 It uses GUI for start server and client sockets.
-You can just find some informations from server, like date, uname, hostname, logged username and python version.
+
+The client socket will get you just find some information about server, like date, uname, hostname, logged username and python version.
 
 ## Getting Started
 
@@ -14,7 +16,7 @@ Python 3+
 
 ### Installing
 
-Download the code, enter inside de code folder and execute:
+Download the code and, inside the code folder, execute:
 
 ```
 python .
