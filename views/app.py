@@ -9,21 +9,22 @@ class Application(tk.Frame):
         self.message_label = None
         self.hostname_entry = None
         self.port_entry = None
-        self.client_console = None
-        self.server_app = None
+        self.client_consoles = []
+        self.server_apps = []
         self.master.minsize(300, 150)
         self.grid()
         self.create_widgets()
         self.master.protocol("WM_DELETE_WINDOW", self._close_and_clear_all)
 
     def _close_and_clear_all(self):
-        if self.client_console and self.client_console.is_active():
-            self.client_console.close()
-
-        if self.server_app and self.server_app.is_active():
-            self.server_app.close()
-
+        self._close_apps(self.server_apps)
+        self._close_apps(self.client_consoles)
         self.quit()
+
+    def _close_apps(self, apps):
+        for app in apps:
+            if app.is_active():
+                app.close()
 
     def create_widgets(self):
         self.message_label = tk.Label(self, text='')
@@ -53,14 +54,23 @@ class Application(tk.Frame):
 
     def init_server(self):
         if self.required_fields_are_valid():
-            self.server_app = ServerApp(self.hostname_entry.get(), int(self.port_entry.get()))
-            self.server_app.open(self)
+            server_app = ServerApp(
+                self.hostname_entry.get(), int(self.port_entry.get()))
+            self.server_apps.append(server_app)
+
+            def callback_error(error):
+                server_app.close()
+                self.message_label.configure(text=str(error), fg='red')
+
+            server_app.open(self, callback_error)
 
     def init_client(self):
         if self.required_fields_are_valid():
-            self.client_console = ClientConsoleSimulator(self.hostname_entry.get(), int(self.port_entry.get()))
-            try:
-                self.client_console.open(self)
-            except:
-                self.client_console.close()
-                self.message_label.configure(text='Não foi possível conectar ao servidor', fg='red')
+            client_console = ClientConsoleSimulator(self.hostname_entry.get(), int(self.port_entry.get()))
+            self.client_consoles.append(client_console)
+
+        try:
+            client_console.open(self)
+        except Exception as error:
+            client_console.close()
+            self.message_label.configure(text=str(error), fg='red')

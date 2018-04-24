@@ -43,8 +43,10 @@ class ClientConsoleSimulator:
         self.window.wm_title("Client Console acessando %s:%s" % (self.client.host, self.client.port))
         self.window.configure(background='black')
         self.window.minsize(self.WIDTH, 400)
-        self._get_label_template(self.PREFIX_TEXT + 'Available commands: ' + self.client.request('?')).pack(side='top',
-                                                                                                            expand=0)
+        # in the time of first request, it is moment that can occur an error
+        self._get_label_template(self.PREFIX_TEXT + 'Available commands: ' + self.client.request('?')).pack(
+            side='top',
+            expand=0)
         self._create_new_main_entry()
 
     def close(self):

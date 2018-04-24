@@ -15,6 +15,7 @@ class Server:
                          'system info': self.get_uname,
                          'python version': self.get_python_version}
         self.can_continue = True
+        self.started = False
 
     def teminate(self):
         self.can_continue = False
@@ -24,6 +25,7 @@ class Server:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((self.host, self.port))
         s.listen(1)
+        self.started = True
 
         while self.can_continue:
             conn, addr = s.accept()
