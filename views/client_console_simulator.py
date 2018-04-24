@@ -1,14 +1,20 @@
 import tkinter as tk
 from services.client import Client
+from services.client_dict_udp import ClientDictUDP
 
 
 class ClientConsoleSimulator:
-    WIDTH = 100
+    WIDTH = 200
     PREFIX_TEXT = '>> '
 
     def __init__(self, hostname, port):
         self.window = None
-        self.client = Client(hostname, port)
+        self.client = ClientDictUDP(hostname, port)
+        self.elements_added = []
+
+    def _clear_panel(self):
+        for element in self.elements_added:
+            element.destroy()
 
     def _get_label_template(self, text):
         return tk.Label(self.window, text=text, fg="white", bg="black", anchor=tk.W, justify=tk.LEFT,
@@ -22,10 +28,15 @@ class ClientConsoleSimulator:
         # last text typed
         label = self._get_label_template(self.PREFIX_TEXT + value)
         label.pack(side='top', expand=0)
+        self.elements_added.append(label)
 
-        # text got from server
-        label = self._get_label_template(self.PREFIX_TEXT + self.client.request(value))
-        label.pack(side='top', expand=0)
+        if value == 'clear':
+            self._clear_panel()
+        else:
+            # text got from server
+            label = self._get_label_template(self.PREFIX_TEXT + self.client.request(value))
+            label.pack(side='top', expand=0)
+            self.elements_added.append(label)
 
         element_entry.destroy()
         self._create_new_main_entry()
@@ -54,5 +65,3 @@ class ClientConsoleSimulator:
 
     def is_active(self):
         return self.window.winfo_exists()
-
-

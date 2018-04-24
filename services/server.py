@@ -38,7 +38,7 @@ class Server:
                     result = func()
                     conn.sendall(str(result).encode())
                 else:
-                    conn.sendall(b'Comando invalido, verifique os possiveis comandos')
+                    conn.sendall(b'Comando invalido, verifique os possiveis comandos "?"')
             conn.close()
 
     def available_commands(self):

@@ -1,9 +1,9 @@
-from services import client, server
+from services import client, server, client_dict_udp, server_dict_udp
 import tkinter as tk
 import threading
 
 
-class ServerApp():
+class ServerApp:
     def __init__(self, hostname, port):
         self.hostname = hostname
         self.port = port
@@ -13,7 +13,7 @@ class ServerApp():
         tk.Button(self.window, text="Encerrar", command=self._close_and_quit_server).pack(pady=10)
 
     def _start_server(self, callback_error):
-        self.server_instance = server.Server(self.hostname, self.port)
+        self.server_instance = server_dict_udp.ServerDictUDP(self.hostname, self.port)
         try:
             self.server_instance.start()
         except Exception as error:
@@ -22,7 +22,7 @@ class ServerApp():
     def _close_and_quit_server(self):
         self.server_instance.teminate()
         if self.server_instance.started:
-            client.Client(self.hostname, self.port).request('') # it is just for forcing the closing of server
+            client_dict_udp.ClientDictUDP(self.hostname, self.port).request('') # it is just for forcing the closing of server
 
         self.window.destroy()
 
